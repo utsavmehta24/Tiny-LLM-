@@ -1,0 +1,31 @@
+// This is your Prisma schema file
+// Learn more at https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Model for user accounts
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  credits   Int      @default(10) // 10 credits given when they sign up
+  createdAt DateTime @default(now())
+  models    Model[]
+}
+
+// Model for saved generated models
+model Model {
+  id        Int      @id @default(autoincrement())
+  name      String
+  fileUrl   String   // where the model or text is stored
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
