@@ -3,7 +3,7 @@ import LoginPage from './LoginPage'
 import { user } from "@/model/user";
 import { connectDb } from '@/helper/db';
 export const metadata = {
-  title: "Todo : Login",
+  title: "Tiny-LLM : Login",
   description: "Login Page",
 };
 

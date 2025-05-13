@@ -1,3 +1,4 @@
+// helper/db.js
 import mongoose from "mongoose";
 
 export async function connectDb() {
@@ -10,9 +11,9 @@ export async function connectDb() {
         
         // Establish a new connection
         await mongoose.connect(process.env.MONGO_DB_URL, {
-            dbName: "Work_manager",
-            useNewUrlParser: true, // To handle deprecation warnings
-            useUnifiedTopology: true, // To handle deprecation warnings
+            dbName: "LLM",
+            useNewUrlParser: true, 
+            useUnifiedTopology: true,
         });
 
         console.log("MongoDB connected");

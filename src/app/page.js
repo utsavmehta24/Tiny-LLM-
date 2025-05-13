@@ -1,17 +1,13 @@
-import MainFeatures from "./Mainpage/Features";
-import IntroBanner from "./Mainpage/IntroBanner";
-import Slider from "./Mainpage/SliderInfo";
+import HomePage from "./Mainpage/HomePage";
 
 export const metadata = {
-  title: "Home : Gerneral Todo's",
+  title: "Home : Tiny-LLm",
   description: "Home",
 };
 export default function Home() {
   return (
     <>
-    <IntroBanner /> 
-    <MainFeatures />
-    <Slider />
+      <HomePage />
     </>
   );
 }

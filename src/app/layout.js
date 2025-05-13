@@ -2,10 +2,13 @@ import { Inter } from "next/font/google";
 import 'react-toastify/dist/ReactToastify.css';
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import { ToastContainer } from "react-toastify";
 import UserProvider from "@/context/userProvider";
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap',
+  fallback: ['system-ui', 'sans-serif'],
+});
 export const metadata = {
   stylesheets: [
     {
@@ -13,8 +16,8 @@ export const metadata = {
       rel: "stylesheet",
     },
     {
-      hrefs: "https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css",
-      rels: "stylesheet",
+      href: "https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css",
+      rel: "stylesheet", 
     },
   ]
 };
@@ -27,7 +30,6 @@ export default function RootLayout({ children }) {
           <Navbar />
           < ToastContainer />
           {children}
-          <Footer />
         </UserProvider>
       </body>
     </html >

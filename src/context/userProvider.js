@@ -1,3 +1,4 @@
+// context/userProvider.js
 "use client";
 import React, { useEffect, useState } from 'react'
 import UserContext from './userContext'
@@ -8,31 +9,34 @@ const UserProvider = ({ children }) => {
     const [user, setUser] = useState({
         name: "",
         email: "",
+        credits: 0
     });
+    
+    const [loading, setLoading] = useState(true);
+    
     useEffect(() => {
         const fetchCurrentUser = async () => {
             try {
+                setLoading(true);
                 const currentUser = await curentUser();
-                // console.log("Current User in the userProvider", currentUser);
-                setUser(currentUser);
-                // console.log("This is the user in the curent User in the current user provider", user);
+                setUser(currentUser || { name: "", email: "", credits: 0 });
             } catch (error) {
-                console.log(error);
-                toast.error("Error Loading the current user");
-                setUser(null);
+                console.error("Error loading current user:", error);
+                toast.error("Error loading user data");
+                setUser({ name: "", email: "", credits: 0 });
+            } finally {
+                setLoading(false);
             }
-        }
+        };
+        
         fetchCurrentUser();
     }, []);
 
-
-
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, loading }}>
             {children}
         </UserContext.Provider>
-    )
+    );
 };
 
-export default UserProvider
-
+export default UserProvider;

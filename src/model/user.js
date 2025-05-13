@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
+// model/user.js
 
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -14,7 +15,11 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Please Enter Your Password"],
-    }
+    },
+    credits: {
+        type: Number,
+        default: 0,
+    },
 })
 
-export const user = mongoose.models.user2 || mongoose.model("user2", userSchema);
+export const user = mongoose.models.users || mongoose.model("users", userSchema);

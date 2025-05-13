@@ -1,132 +1,123 @@
+// src/app/components/Navbar.jsx
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import UserContext from "@/context/userContext";
 import { logOut } from "../Services/userService";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { FaBars, FaTimes } from "react-icons/fa";
 
-const Navbar = () => {
+export default function Navbar() {
   const router = useRouter();
   const { user, setUser } = useContext(UserContext);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  useEffect(() => {
-    // console.log("Context in the Navbar.jsx file", user);
-  }, [user]);
-
-  const doLogout = async () => {
+  const handleLogout = async () => {
     try {
       await logOut();
-      const user = { name: "", email: "" };
-      setUser(user);
+      setUser({ name: "", email: "", credits: 0 });
       router.push("/");
-    } catch (error) {
-      console.error(error);
-      toast.error("Error while Logging Out !!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Logout failed");
     }
   };
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const commonLinkStyles = "px-4 py-2 rounded font-medium transition hover:scale-105";
 
   return (
-    <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-        <div className="flex justify-between items-center w-full md:w-auto">
-          <h1 className="text-white text-2xl font-bold">
-            <Link href="/">
-              <span className="relative group text-white border-2 border-white p-2 rounded cursor-pointer hover:bg-white hover:text-gray-800 hover:border-black-800">
-                Casual Todo's
-              </span>
-            </Link>
-          </h1>
+    <nav className="bg-gray-900 text-white shadow-lg sticky top-0 z-50">
+      <div className="container mx-auto flex items-center justify-between px-6 py-4">
+        {/* Brand */}
+        <Link href="/" className="text-3xl font-bold bg-gradient-to-r from-teal-400 via-blue-500 to-teal-400 bg-clip-text text-transparent">
+          NextGen AI
+        </Link>
 
-          {/* Hamburger Icon for Mobile View */}
-          <div className="md:hidden flex items-center">
-            <button onClick={toggleMobileMenu} className="text-white focus:outline-none">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Centered Menu Items for Desktop */}
-        <div className="hidden md:flex flex-grow justify-center space-x-4">
-          {user?.email === "" ? (
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-6">
+          {user?.email ? (
             <>
-              {/* Empty for non-authenticated users */}
-            </>
-          ) : (
-            <>
-              <span className="relative group text-2xl text-white hover:text-gray-300 cursor-pointer">
-                <Link href="/Dashboard">Home</Link>
-                <span className="absolute m-0 left-0 top-8 bottom-0 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
+              {/* Credits */}
+              <span className="text-sm text-gray-300">
+                Credits left: <strong className="text-teal-400">
+                  {user.credits}
+                  </strong>
               </span>
 
-              <span className="relative group text-2xl text-white hover:text-gray-300 cursor-pointer">
-                <Link href="/addtask">Add Task</Link>
-                <span className="absolute m-0 left-0 top-8 bottom-0 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
+              {/* Dashboard */}
+              <Link href="/Dashboard" className={`${commonLinkStyles} bg-teal-500 hover:bg-teal-600 text-white`}>
+                Dashboard
+              </Link>
+
+              {/* Username */}
+              <span className="px-4 py-2 bg-gray-800 text-gray-200 rounded">
+                {user.name}
               </span>
 
-              <span className="relative group text-2xl text-white hover:text-gray-300 cursor-pointer">
-                <Link href="/showtask">Show Task</Link>
-                <span className="absolute m-0 left-0 bottom-0 top-8 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
-              </span>
-            </>
-          )}
-        </div>
-
-        {/* Right-aligned User Menu and Auth Buttons */}
-        <div className="hidden md:flex items-center space-x-4">
-          {user?.email === "" ? (
-            <>
-              <button className="relative group text-xl text-white border-2 p-2 border-white rounded hover:border-black hover:bg-white hover:text-gray-800 cursor-pointer">
-                <Link href="/login">Login</Link>
-              </button>
-              <button className="relative group text-xl text-white border-2 p-2 border-white rounded hover:border-black hover:bg-white hover:text-gray-800 cursor-pointer">
-                <Link href="/signup">Signup</Link>
+              {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className={`${commonLinkStyles} bg-red-500 hover:bg-red-600 text-white`}
+              >
+                Logout
               </button>
             </>
           ) : (
             <>
-              {/* User Dashboard Button */}
-              <span className="relative group text-xl text-white border-2 p-2 border-white rounded hover:border-black hover:bg-white hover:text-gray-800 cursor-pointer">
-                <Link href="/">{user?.name}</Link>
-              </span>
-
-              {/* Logout Button */}
-              <span className="relative group text-xl text-white border-2 p-2 border-white rounded hover:border-black hover:bg-white hover:text-gray-800 cursor-pointer">
-                <button onClick={doLogout}>Logout</button>
-              </span>
+              {/* Not signed in */}
+              <Link href="/login" className={`${commonLinkStyles} border border-teal-400 text-teal-400 hover:bg-teal-400 hover:text-gray-900`}>
+                Login
+              </Link>
+              <Link href="/signup" className={`${commonLinkStyles} border border-white text-white hover:bg-white hover:text-gray-900`}>
+                Signup
+              </Link>
             </>
           )}
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden flex flex-col space-y-4 mt-4">
-            {user?.email === "" ? (
-              <>
-                <Link href="/login" className="text-xl text-white">Login</Link>
-                <Link href="/signup" className="text-xl text-white">Signup</Link>
-              </>
-            ) : (
-              <>
-                <Link href="/" className="text-xl text-white">Home</Link>
-                <Link href="/addtask" className="text-xl text-white">Add Task</Link>
-                <Link href="/showtask" className="text-xl text-white">Show Task</Link>
-                <Link href="/Dashboard" className="text-xl text-white">{user?.name}</Link>
-                <button onClick={doLogout} className="text-xl text-red-500">Logout</button>
-              </>
-            )}
-          </div>
-        )}
+        {/* Mobile Toggle */}
+        <button
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+          className="md:hidden text-gray-300 hover:text-white focus:outline-none"
+        >
+          {isMobileOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileOpen && (
+        <div className="md:hidden bg-gray-800 px-6 py-4 space-y-4">
+          {user?.email ? (
+            <>
+              <div className="text-sm text-gray-300">
+                Credits left: <strong className="text-teal-400">{user.credits}</strong>
+              </div>
+              <Link href="/Dashboard" className="block w-full text-center py-2 bg-teal-500 rounded hover:bg-teal-600 transition">
+                Dashboard
+              </Link>
+              <div className="px-4 py-2 bg-gray-700 text-gray-200 rounded">
+                {user.name}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full py-2 bg-red-500 rounded hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="block w-full text-center py-2 border border-teal-400 text-teal-400 rounded hover:bg-teal-400 hover:text-gray-900 transition">
+                Login
+              </Link>
+              <Link href="/signup" className="block w-full text-center py-2 border border-white text-white rounded hover:bg-white hover:text-gray-900 transition">
+                Signup
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   );
-};
-
-export default Navbar;
+}
